@@ -1,2 +1,2 @@
-# footcontrol
-Flask app to control football games
+# FootDraw
+System for drawing players in football teams
