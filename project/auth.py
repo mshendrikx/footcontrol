@@ -3,8 +3,8 @@ import os
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user
-from .models import User, Groupadm
-from .footdraw import recover_email
+from .models import User, Player
+from .footcontrol import recover_email
 from . import db
 
 auth = Blueprint("auth", __name__)
@@ -16,11 +16,15 @@ def login():
 @auth.route("/login", methods=["POST"])
 def login_post():
     # login code goes here
-    userid = request.form.get("userid")
+    user_login = request.form.get("user_login")
     password = request.form.get("password")
     remember = True if request.form.get("remember") else False
 
-    user = User.query.filter_by(id=userid).first()
+    if '@' in user_login:
+        user = User.query.filter_by(email=user_login).first()
+    else:
+        user = User.query.filter_by(phone=int(user_login)).first()
+        
     # check if the user actually exists
     # take the user-supplied password, hash it, and compare it to the hashed password in the database
     if not user or not check_password_hash(user.password, password):
@@ -30,19 +34,12 @@ def login_post():
             url_for("auth.login")
         )  # if the user doesn't exist or password is wrong, reload the page
     
-    if user.admin == "X":
-        user.groupadm = "X"
-        user.updplayer = "X"  
-    else:
-        user.groupadm = " "
-        user.updplayer = " "   
-        group_adm = Groupadm.query.filter_by(groupid=user.groupid, userid=user.id).first()
-        if group_adm:
-            if group_adm.admin == "X":
-                user.groupadm = "X"
-                user.updplayer = "X"
-            elif group_adm.updplayer == "X":
-                user.updplayer = "X"
+    if user.admin == 1:
+        user.groupadm = 1
+    elif user.groupid > 0:
+        player = Player.query.filter_by(gourpid=user.groupid, userid=user.id).first()
+        if player:
+            user.groupadm = player.groupadm
             
     login_user(user, remember=remember)
     db.session.add(user)

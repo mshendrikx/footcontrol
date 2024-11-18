@@ -26,14 +26,13 @@ def create_app():
     login_manager.login_view = "auth.login"
     login_manager.init_app(app)
 
-    from .models import User
-
     with app.app_context():
 
         # Create tables
         db.create_all()
 
         # add admin user to the database
+        from .models import User
         user = User.query.filter_by(id=1).first()
         if not user:
             new_user = User(

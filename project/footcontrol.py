@@ -8,10 +8,10 @@ from email.mime.text import MIMEText
 def recover_email(user, password):
 
     # Example usage with a custom sender name
-    sender_name = "FootDraw"
-    sender_email = os.environ["FOOTDRAW_EMAIL"]
+    sender_name = "FootControl"
+    sender_email = os.environ["FOOTCONTROL_EMAIL"]
     recipient_email = user.email
-    subject = "FootDraw Login"
+    subject = "FootControl Login"
     text_content = "User: " + str(user.id) + "\n" + "Password: " + str(password)
 
     return send_email(
