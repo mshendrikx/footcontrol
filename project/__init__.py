@@ -9,6 +9,7 @@ from werkzeug.security import generate_password_hash
 db = SQLAlchemy()
 
 def create_app():
+    
     app = Flask(__name__)
 
     mariadb_pass = os.environ.get("MYSQL_ROOT_PASSWORD")
@@ -16,7 +17,7 @@ def create_app():
 
     app.config["SECRET_KEY"] = os.urandom(24).hex()
     app.config["SQLALCHEMY_DATABASE_URI"] = (
-        "mysql+pymysql://root:" + mariadb_pass + "@" + mariadb_host + "/footdraw"
+        "mysql+pymysql://root:" + mariadb_pass + "@" + mariadb_host + "/footcontrol"
     )
 
     db.init_app(app)
@@ -33,15 +34,16 @@ def create_app():
         db.create_all()
 
         # add admin user to the database
-        user = User.query.filter_by(id="admin").first()
+        user = User.query.filter_by(id=1).first()
         if not user:
             new_user = User(
-                id="admin",
                 name="Administrator",
-                groupid=0,
-                password=generate_password_hash("F00tDr4w", method="pbkdf2:sha256"),
-                admin="X",
+                password=generate_password_hash("F00tC0ntr0l", method="pbkdf2:sha256"),
                 email=" ",
+                phone=99999999999,
+                admin="X",
+                groupid=0,
+                groupadm=0,
             )
             db.session.add(new_user)
             db.session.commit()
