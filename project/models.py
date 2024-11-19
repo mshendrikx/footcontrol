@@ -13,14 +13,15 @@ class Position(db.Model):
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     groupid = db.Column(db.Integer)
-    date = db.Column(db.Biginteger)    
+    date = db.Column(db.BigInteger)  
+    active = db.Column(db.Integer)
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     password = db.Column(db.String(1000))
     email = db.Column(db.String(100))
-    phone = db.Column(db.Biginteger)   
+    phone = db.Column(db.BigInteger)   
     admin = db.Column(db.Integer)  
     groupid = db.Column(db.Integer)   
     groupadm = db.Column(db.Integer)  
@@ -48,8 +49,8 @@ class Vote(db.Model):
 class Attendance(db.Model):
     gameid = db.Column(db.Integer, primary_key=True)
     userid = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Biginteger)
-    checkin = db.Column(db.Biginteger)
+    date = db.Column(db.BigInteger)
+    checkin = db.Column(db.BigInteger)
     
 class Team(db.Model):
     gameid = db.Column(db.Integer, primary_key=True)

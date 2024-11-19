@@ -21,10 +21,12 @@ def create_app():
     )
 
     db.init_app(app)
-
+    
     login_manager = LoginManager()
     login_manager.login_view = "auth.login"
     login_manager.init_app(app)
+
+    from .models import User
 
     with app.app_context():
 
@@ -32,7 +34,7 @@ def create_app():
         db.create_all()
 
         # add admin user to the database
-        from .models import User
+        
         user = User.query.filter_by(id=1).first()
         if not user:
             new_user = User(
@@ -40,7 +42,7 @@ def create_app():
                 password=generate_password_hash("F00tC0ntr0l", method="pbkdf2:sha256"),
                 email=" ",
                 phone=99999999999,
-                admin="X",
+                admin=1,
                 groupid=0,
                 groupadm=0,
             )

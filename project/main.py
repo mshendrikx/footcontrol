@@ -5,9 +5,10 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from sqlalchemy import and_
 from werkzeug.security import generate_password_hash
 from flask_login import login_required, current_user
-from . import db
 from .footcontrol import get_distinct_numbers_random, recover_email
-from .models import User, Player, Group, Groupadm, Draworder
+from .models import User, Player, Group, Position, Game, Skill, Vote, Attendance, Team
+
+from . import db
 
 class ConstValue:
     zero = 0
@@ -16,13 +17,6 @@ class ConstValue:
     three = 3
     four = 4
     five = 5
-    
-class Team:
-    id = 0
-    defense = 0
-    midfilder = 0
-    forward = 0
-    overall = 0
 
 main = Blueprint("main", __name__)
 
@@ -37,23 +31,22 @@ def profile():
 
     groups = None
     
-    if current_user.admin == 'X':
+    if current_user.admin == 1:
         groups = Group.query.all()
-    
     else:
-    
-        groups_adm = Groupadm.query.filter_by(userid=current_user.id)
-    
-        groups_id = []
-        for group_adm in groups_adm:
-            groups_id.append(group_adm.groupid)
-        
+        players = Player.query.filter_by(userid=current_user.id)
+        try:
+           groups_id = []
+           for player in players:
+               groups_id.append(player.groupid)
+        except:
+            1 == 1
+              
         if groups_id:
             query = db.session.query(Group)
             groups = query.filter(Group.id.in_(groups_id)).order_by(Group.name)
 
     return render_template("profile.html", current_user=current_user, groups=groups)
-
 
 @main.route("/profile", methods=["POST"])
 @login_required
@@ -62,7 +55,7 @@ def profile_post():
     password = request.form.get("password")
     repass = request.form.get("repass")
     name = request.form.get("name")
-    groupid = request.form.get("group_selection")
+    groupid = int(request.form.get("group_selection"))
     email = request.form.get("email")
 
     if password != repass:
@@ -81,19 +74,12 @@ def profile_post():
     if groupid != current_user.groupid:
         current_user.groupid = groupid
     
-    if current_user.admin == "X":
-        current_user.groupadm = "X"
-        current_user.updplayer = "X"       
-    else:        
-        current_user.groupadm = " "
-        current_user.updplayer = " "
-        group_adm = Groupadm.query.filter_by(groupid=groupid, userid=current_user.id).first()
-        if group_adm:
-            if group_adm.admin == "X":
-                current_user.groupadm = "X"
-                current_user.updplayer = "X"
-            elif current_user.updplayer == "X":
-                current_user.updplayer = "X"
+    if current_user.admin == 1:
+        current_user.groupadm = 1
+    else:  
+        player = Player.query.filter_by(groupid=groupid, userid=current_user.id).first()     
+        if player:
+            current_user.groupadm = player.groupadm
 
     if name != "":
         current_user.name = name
@@ -135,15 +121,15 @@ def creategroup():
 @login_required
 def delgroup():
 
-    if current_user.admin == "":
+    if current_user.admin == 0:
         flash("Deve ser admnistrador.")
         flash("alert-danger")
         return redirect(url_for("main.index"))
 
     # login code goes here
-    groupid = request.form.get("group_delete")
+    groupid = int(request.form.get("group_delete"))
     
-    if groupid == "":
+    if groupid == 0:
         flash("Selecionar grupo.")
         flash("alert-danger")
         return redirect(url_for("main.configuration"))        
@@ -156,9 +142,18 @@ def delgroup():
     else:
         flash("Grupo apagado.")
         flash("alert-success")
-        Groupadm.query.filter_by(groupid=groupid).delete()
         Player.query.filter_by(groupid=groupid).delete()
-        users = User.query.filter_by(groupid=groupid).first()
+        Position.query.filter_by(groupid=groupid).delete()
+        Skill.query.filter_by(groupid=groupid).delete()
+        Vote.query.filter_by(groupid=groupid).delete()
+        games = Game.query.filter_by(groupid=groupid).delete()
+        try:
+            for game in games:
+                Attendance.query.filter_by(gameid=game.id).delete()
+                Team.query.filter_by(gameid=game.id).delete()                
+        except:
+            1 == 1
+        users = User.query.filter_by(groupid=groupid)
         if users:
             for user in users:
                 user.groupid = 0
