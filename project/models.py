@@ -9,6 +9,7 @@ class Position(db.Model):
     groupid = db.Column(db.Integer, primary_key=True)
     posid = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
+    quantity = db.Column(db.Integer)
 
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)

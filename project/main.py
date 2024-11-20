@@ -29,24 +29,7 @@ def index():
 @login_required
 def profile():
 
-    groups = None
-    
-    if current_user.admin == 1:
-        groups = Group.query.all()
-    else:
-        players = Player.query.filter_by(userid=current_user.id)
-        try:
-           groups_id = []
-           for player in players:
-               groups_id.append(player.groupid)
-        except:
-            1 == 1
-              
-        if groups_id:
-            query = db.session.query(Group)
-            groups = query.filter(Group.id.in_(groups_id)).order_by(Group.name)
-
-    return render_template("profile.html", current_user=current_user, groups=groups)
+    return render_template("profile.html", current_user=current_user)
 
 @main.route("/profile", methods=["POST"])
 @login_required
@@ -55,7 +38,6 @@ def profile_post():
     password = request.form.get("password")
     repass = request.form.get("repass")
     name = request.form.get("name")
-    groupid = int(request.form.get("group_selection"))
     email = request.form.get("email")
     phone = request.form.get("phone")
 
@@ -71,17 +53,7 @@ def profile_post():
             
     if password != "":
         current_user.password = generate_password_hash(password, method="pbkdf2:sha256")
-
-    if groupid != current_user.groupid:
-        current_user.groupid = groupid
     
-    if current_user.admin == 1:
-        current_user.groupadm = 1
-    else:  
-        player = Player.query.filter_by(groupid=groupid, userid=current_user.id).first()     
-        if player:
-            current_user.groupadm = player.groupadm
-
     if name != "":
         current_user.name = name
         
