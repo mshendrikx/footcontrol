@@ -14,7 +14,9 @@ class Position(db.Model):
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     groupid = db.Column(db.Integer)
-    date = db.Column(db.BigInteger)  
+    date = db.Column(db.BigInteger)
+    release = db.Column(db.BigInteger)
+    finish = db.Column(db.BigInteger)
     active = db.Column(db.Integer)
 
 class User(UserMixin, db.Model):

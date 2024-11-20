@@ -6,12 +6,29 @@
         {{ group.name }}
     </h3>
 </div><br>
+<br>
 <div class="container border">
-    <br>
-    <h4 class="title">
-        Ordem do Sorteio
-    </h4>
-    <br>
+    <form action="/addgroup" method="POST">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-3 text-white">
+                    <label for="group_name">Grupo:</label>
+                </div>
+                <div class="col-9 text-white">
+                    <input type="text" class="form-control" id="group_name" name="group_name" required>
+                </div>
+                <input type="submit" class="btn btn-outline-primary" name="action" value="Carregar">
+                {% if current_user.admin == 1 %}
+                &nbsp;&nbsp;
+                <input type="submit" class="btn btn-outline-warning" name="action" value="Criar">&nbsp;&nbsp;
+                <input type="submit" class="btn btn-outline-danger" name="action" value="Apagar">
+                {% endif %}
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="container border">
     <form action="/editgroup" method="POST">
         <div class="container-fluid">
             <div class="input-group">
