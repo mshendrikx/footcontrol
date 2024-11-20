@@ -16,7 +16,7 @@ def login():
 @auth.route("/login", methods=["POST"])
 def login_post():
     # login code goes here
-    user_login = request.form.get("user_login")
+    user_login = request.form.get("userid")
     password = request.form.get("password")
     remember = True if request.form.get("remember") else False
 

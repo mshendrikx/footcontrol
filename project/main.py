@@ -57,6 +57,7 @@ def profile_post():
     name = request.form.get("name")
     groupid = int(request.form.get("group_selection"))
     email = request.form.get("email")
+    phone = request.form.get("phone")
 
     if password != repass:
         flash("Password está diferente")
@@ -85,6 +86,8 @@ def profile_post():
         current_user.name = name
         
     current_user.email = email
+    
+    current_user.phone = phone
 
     db.session.add(current_user)
     db.session.commit()

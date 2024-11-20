@@ -22,6 +22,15 @@
             </div>
             <div class="row">
                 <div class="col-3 text-white">
+                    <label for="email">Telefone:</label>
+                </div>
+                <div class="col-9 text-white">
+                    <input type="text" class="form-control" id="phone" name="phone" value="{{ current_user.phone }}"
+                        required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3 text-white">
                     <label for="email">E-mail:</label>
                 </div>
                 <div class="col-9 text-white">
@@ -45,6 +54,17 @@
                     <input type="password" class="form-control" id="repass" name="repass">
                 </div>
             </div>
+        </div>
+        <br>
+        <button class="btn btn-outline-primary">Gravar</button>
+    </form>
+    <br>
+</div>
+<br>
+<div class="container border">
+    <br>
+    <form action="/usergroup" method="POST">
+        <div class="container-fluid">
             <div class="row">
                 <div class="col-3 text-white">
                     <label for="group_selection">Grupo:</label>
@@ -52,7 +72,7 @@
                 <div class="col-3 text-white">
                     {% if groups != None %}
                     <select name="group_selection" id="group_selection">
-                        <option value=""></option>
+                        <option value="0"></option>
                         {% for group in groups %}
                         {% if group.id == current_user.groupid %}
                         <option value="{{ group.id }}" selected>{{ group.name }}</option>
@@ -62,7 +82,6 @@
                         {% endfor %}
                     </select>
                     {% endif %}
-
                 </div>
             </div>
         </div>
