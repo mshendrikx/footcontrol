@@ -1,33 +1,27 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-3">
-    <h3 class="title" style="text-align: center;">
-        {{ group.name }}
-    </h3>
-</div><br>
-<br>
+
 <div class="container border">
-    <form action="/addgroup" method="POST">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-3 text-white">
-                    <label for="group_name">Grupo:</label>
-                </div>
-                <div class="col-9 text-white">
-                    <input type="text" class="form-control" id="group_name" name="group_name" required>
-                </div>
-                <input type="submit" class="btn btn-outline-primary" name="action" value="Carregar">
-                {% if current_user.admin == 1 %}
-                &nbsp;&nbsp;
-                <input type="submit" class="btn btn-outline-warning" name="action" value="Criar">&nbsp;&nbsp;
-                <input type="submit" class="btn btn-outline-danger" name="action" value="Apagar">
-                {% endif %}
-            </div>
+    <br>
+    <form method="POST" action="{{ url_for('main.maintain_group') }}">
+        <div class="input-group">
+            <label for="maintain_group">Grupo:</label>
+            <input list="maintain_group" name="maintain_group" autocomplete="off" placeholder="Room" required>
+            <datalist id="maintain_group">
+                {% for group in groups %}
+                <option value="{{ group.id }}">{{ group.name }}</option>
+                {% endfor %}
+            </datalist>&nbsp;&nbsp;
+            <input type="submit" class="btn btn-outline-primary" name="action" value="Carregar">&nbsp;&nbsp;
+            <input type="submit" class="btn btn-outline-warning" name="action" value="Criar">&nbsp;&nbsp;
+            <input type="submit" class="btn btn-outline-danger" name="action" value="Apagar">
         </div>
     </form>
+    <br>
 </div>
-
+<br>
+{% if current_group.id > 0 %}
 <div class="container border">
     <form action="/editgroup" method="POST">
         <div class="container-fluid">
@@ -64,5 +58,5 @@
     </form>
     <br>
 </div>
-
+{% endif %}
 {% endblock %}

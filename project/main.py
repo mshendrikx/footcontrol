@@ -166,12 +166,14 @@ def players():
 @login_required
 def group():
     
-    if current_user.groupid < 1:
-        flash("Primeiro selecionar grupo.")
-        flash("alert-danger")
-        return redirect(url_for("main.profile"))   
-    
-    draw_orders = Draworder.query.filter_by(groupid=current_user.groupid)
+    if current_user.
+    if current_user.admin == 1:
+        groups = Group.query.all()
+    elif:    
+        players = Player.query.filter_by(playerid= current_user.id)
+        group_ids = []
+        for palayer in players:
+
     
     posorders = []
     count = 1
